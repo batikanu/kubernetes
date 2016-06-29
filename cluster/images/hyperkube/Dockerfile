@@ -59,10 +59,23 @@ COPY copy-addons.sh /copy-addons.sh
 # easy-rsa package required by make-ca-cert
 ADD https://storage.googleapis.com/kubernetes-release/easy-rsa/easy-rsa.tar.gz /root/kube/
 
-# Copy the cni folder into /opt/
-COPY cni /opt/cni
-
 # Create symlinks for each hyperkube server
 # TODO: this is unreliable for now (e.g. running "/kubelet" panics)
 # Also, it doesn't work for other architectures
 # RUN /hyperkube --make-symlinks
+
+# Copy CNI binary and configuration files
+
+RUN apt-get update && apt-get upgrade && apt-get install xz-utils  && rm -rf /var/lib/apt/lists/*
+
+RUN mkdir -p /opt/cni/bin
+RUN mkdir -p /etc/cni/net.d
+
+WORKDIR /tmp
+
+RUN curl -L https://github.com/containernetworking/cni/releases/download/v0.3.0/cni-v0.3.0.txz -O \
+    && tar xvf cni-v0.3.0.txz -C /opt/cni/bin \
+    && rm cni-v0.3.0.txz
+
+COPY 10-containernet.conf /etc/cni/net.d
+COPY 99-loopback.conf /etc/cni/net.d
