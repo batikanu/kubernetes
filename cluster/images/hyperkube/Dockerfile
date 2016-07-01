@@ -66,7 +66,7 @@ ADD https://storage.googleapis.com/kubernetes-release/easy-rsa/easy-rsa.tar.gz /
 
 # Copy CNI binary and configuration files
 
-RUN apt-get update && apt-get upgrade && apt-get install xz-utils  && rm -rf /var/lib/apt/lists/*
+RUN apt-get update -y && apt-get upgrade -y && apt-get install -y xz-utils  && rm -rf /var/lib/apt/lists/*
 
 RUN mkdir -p /opt/cni/bin
 RUN mkdir -p /etc/cni/net.d
