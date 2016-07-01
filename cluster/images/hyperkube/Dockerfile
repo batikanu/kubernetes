@@ -77,5 +77,10 @@ RUN curl -L https://github.com/containernetworking/cni/releases/download/v0.3.0/
     && tar xvf cni-v0.3.0.txz -C /opt/cni/bin \
     && rm cni-v0.3.0.txz
 
+# Copy flannerl + cni network configuration
 COPY 10-containernet.conf /etc/cni/net.d
 COPY 99-loopback.conf /etc/cni/net.d
+
+# Copy installation script
+RUN mkdir -p /setup
+COPY install.sh /setup
